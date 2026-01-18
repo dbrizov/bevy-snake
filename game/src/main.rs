@@ -1,8 +1,17 @@
+mod libs;
+
+use crate::libs::bevy_framepace::{FramepacePlugin, FramepaceSettings, Limiter};
 use bevy::prelude::*;
+
+const FPS_TARGET: f64 = 60.0;
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
+        .add_plugins(FramepacePlugin)
+        .insert_resource(FramepaceSettings {
+            limiter: Limiter::from_framerate(FPS_TARGET),
+        })
         .add_plugins(HelloPlugin)
         .run();
 }
@@ -28,6 +37,6 @@ fn add_people(mut commands: Commands) {
 
 fn greet_people(time: Res<Time>, query: Query<&Name, With<Person>>) {
     for name in &query {
-        println!("{}, {:?}", time.delta_secs(), name.0);
+        println!("{}, {:?}", 1.0 / time.delta_secs(), name.0);
     }
 }
